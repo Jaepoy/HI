@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B6CB0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Speak English">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon.svg">
+<title>Speak English - 30 Days</title>
+<style>
+:root{--bg:#F4F7FB;--card:#fff;--ink:#1A2433;--mut:#5C6B7F;--pri:#2B6CB0;--ok:#2F9E6B;--line:#DCE4EE}
+@media(prefers-color-scheme:dark){:root{--bg:#0F1620;--card:#18222F;--ink:#EAF0F7;--mut:#9AABC0;--pri:#5BA3E8;--ok:#4CC38A;--line:#2A3646}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+main{max-width:560px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:24px;margin:8px 0 2px} h2{font-size:20px;margin:6px 0} h3{font-size:14px;color:var(--mut);margin:22px 0 8px;text-transform:uppercase;letter-spacing:.05em}
+.sub{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--ok);transition:width .4s}
+.row{display:flex;gap:10px;align-items:center}
+.stats{display:flex;justify-content:space-between;color:var(--mut);font-size:14px}
+button{font:inherit;border:0;border-radius:14px;padding:13px 16px;background:var(--pri);color:#fff;font-weight:600;min-height:48px;cursor:pointer}
+button.alt{background:transparent;color:var(--pri);border:2px solid var(--pri)}
+button.big{width:100%;font-size:17px}
+button:disabled{opacity:.5}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tile{aspect-ratio:1;padding:0;background:var(--card);color:var(--ink);border:1px solid var(--line);font-size:17px;position:relative}
+.tile.done{background:var(--ok);color:#fff;border-color:var(--ok)}
+.tile.now{border:2px solid var(--pri)}
+.phrase{font-size:19px;line-height:1.35;margin:0 0 12px;font-weight:600}
+.phrase.hit{color:var(--ok)}
+.fb{font-size:14px;color:var(--mut);min-height:20px;margin:10px 0 0}
+.back{background:none;color:var(--pri);padding:8px 0;min-height:40px}
+.nav{display:flex;gap:10px;margin-top:14px}.nav button{flex:1}
+.tog{display:flex;gap:6px;margin:8px 0 14px}.tog button{flex:1;padding:9px;min-height:40px}
+.tip{font-size:14px;color:var(--mut)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const DAYS=[
+["Say hello!",["Hello, my name is Maria.","Nice to meet you.","How are you today?","I'm fine, thank you. And you?"]],
+["Give basic information",["I'm from the Philippines.","I'm thirty years old.","Could you spell your name, please?","I speak English and Filipino."]],
+["You and your family",["I have two brothers and one sister.","My mother is a teacher.","I live with my parents.","Do you have a big family?"]],
+["Describing people",["She has long black hair.","He is tall and very friendly.","What does your brother look like?","She looks like her mother."]],
+["Talk about your life",["I work as a property specialist.","I get up at six every morning.","I start work at nine o'clock.","What time do you finish work?"]],
+["Talk about your hobbies",["I like listening to music.","In my free time, I love playing basketball.","I don't mind cooking.","What do you enjoy doing?"]],
+["Talk about where you live",["I live in Manila.","There is a market near my house.","Is there a bank near here?","My house is next to the church."]],
+["Asking for help",["Excuse me, could you help me?","Can you repeat that, please?","Do you know where the station is?","Sorry, I don't understand."]],
+["Saying what you want",["I'd like a cup of coffee, please.","Could I have the bill, please?","I would like to book a table.","Thank you very much."]],
+["Review and stretch",["Hello, I'm Maria. I'm from Manila.","I work in sales and I like reading.","I live with my family because it's close to work.","I like coffee, but I don't like tea."]],
+["Going shopping",["How much is this?","Do you have this in a larger size?","Can I try this on?","Is this on sale?"]],
+["Describing things",["This room is bright and clean.","The food was delicious.","It's a small but comfortable place.","That movie was really exciting."]],
+["Comparing things",["This one is cheaper than that one.","My phone is newer than yours.","Which one is better?","It's the best restaurant in town."]],
+["Buying tickets",["I'd like two tickets to Cebu, please.","What time does the bus leave?","Is this seat taken?","Is the train on time?"]],
+["Getting around",["How do I get to the airport?","Turn left at the corner.","Go straight for two blocks.","How far is it from here?"]],
+["Making bookings",["I'd like to book a room for two nights.","Is breakfast included?","Can I change my reservation?","I'm sorry, but there seems to be a problem."]],
+["Talking about food",["I'm hungry. Let's eat.","I love spicy food.","I'm allergic to peanuts.","What's your favorite dish?"]],
+["In a restaurant",["A table for two, please.","I'll have the chicken, please.","Could we have some more water?","Can we pay separately?"]],
+["Official English",["I'd like to open a bank account.","I need to fill in this form.","Could you say that again, more slowly?","I have to send this package today."]],
+["Review and stretch",["Excuse me, could you tell me where the mall is?","I'd like to buy a bigger jacket, please.","I'd like a table for two by the window.","Thank you, you've been very helpful."]],
+["Easy phone calls",["Hello, this is Maria speaking.","May I speak to Mister Cruz, please?","Could you hold on a moment?","Sorry, I can't hear you well."]],
+["Plans and decisions",["I'm going to visit my cousin this weekend.","I think I'll take the early bus.","Let's meet at six o'clock.","I haven't decided yet."]],
+["Phone messages",["Can I leave a message?","Please ask him to call me back.","My number is zero nine one seven.","Thanks for calling."]],
+["Talking about your past",["I worked in sales for many years.","Last year, I moved to a new city.","I studied computer science.","I went to the beach yesterday."]],
+["Keep a conversation going",["Really? Tell me more.","That sounds interesting.","What about you?","Me too!"]],
+["Talking in the street",["Sorry, could you speak a bit slower?","Excuse me, what time is it?","Is this the right way to the park?","Thanks for your help!"]],
+["Your experiences",["Have you ever been to Japan?","I've never tried skydiving.","I've been working here for two years.","It was one of the best experiences of my life."]],
+["Talking about feelings",["I'm so excited about this trip.","I feel a little nervous.","I'm really proud of you.","I've been feeling tired lately."]],
+["Giving your opinion",["In my opinion, it's a good idea.","I agree with you.","I see your point, but I think differently.","To be honest, I'm not sure."]],
+["Review and stretch",["Hello, I'm Maria. It's nice to meet you.","Could you help me find the station, please?","Learning English is important because it opens doors.","Thank you for talking with me today."]]];
+const PARTS=["Part 1 - The Basics","Part 2 - Out and about","Part 3 - Talking with people"];
+const TIPS=["Smile and speak slowly. Confidence matters more than perfect grammar.","Say each sentence three times: slow, normal, then like a native speaker.","Short sentences are fine. Clear is better than long."];
+const $=s=>document.querySelector(s), app=$("#app");
+let S={done:[],streak:0,last:"",slow:false};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("se30")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("se30",JSON.stringify(S))}catch(e){}};
+const today=()=>new Date().toDateString();
+const norm=t=>t.toLowerCase().replace(/[^a-z0-9' ]/g,"").split(/\s+/).filter(Boolean);
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+function say(t,btn){
+  if(!("speechSynthesis" in window))return alert("Audio is not supported on this browser.");
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=S.slow?.6:.9;speechSynthesis.speak(u);
+}
+function home(){
+  const n=S.done.length,next=Math.min(30,(DAYS.findIndex((_,i)=>!S.done.includes(i))+1)||30);
+  let h=`<h1>Speak English</h1><p class="sub">30 days. A few minutes a day.</p>
+  <div class="card"><div class="stats"><span><b>${n}</b> / 30 days</span><span>🔥 ${S.streak} day streak</span></div>
+  <div class="bar"><i style="width:${n/30*100}%"></i></div>
+  <button class="big" onclick="openDay(${next-1})">${n?"Continue":"Start"} Day ${next}</button></div>`;
+  PARTS.forEach((p,pi)=>{h+=`<h3>${p}</h3><div class="grid">`;
+    for(let i=pi*10;i<pi*10+10;i++)h+=`<button class="tile ${S.done.includes(i)?"done":""} ${i==next-1&&!S.done.includes(i)?"now":""}" onclick="openDay(${i})" aria-label="Day ${i+1}">${S.done.includes(i)?"✓":i+1}</button>`;
+    h+=`</div>`});
+  h+=`<p class="tip" style="margin-top:22px">Tip: ${TIPS[new Date().getDate()%3]}</p>`;
+  app.innerHTML=h;scrollTo(0,0);
+}
+function openDay(d){
+  const [t,ph]=DAYS[d];
+  let h=`<button class="back" onclick="home()">← All days</button><p class="sub" style="margin:0">Day ${d+1} of 30</p><h2>${t}</h2>
+  <p class="tip">Tap 🔊 to listen, then tap 🎤 and say it out loud.</p>
+  <div class="tog"><button class="${S.slow?"alt":""}" onclick="S.slow=false;save();openDay(${d})">Normal speed</button><button class="${S.slow?"":"alt"}" onclick="S.slow=true;save();openDay(${d})">Slow speed</button></div>`;
+  ph.forEach((p,i)=>{h+=`<div class="card"><p class="phrase" id="p${i}">${p}</p>
+  <div class="row"><button onclick="say(${JSON.stringify(p).replace(/"/g,'&quot;')})">🔊 Listen</button>
+  ${SR?`<button class="alt" onclick="speak(${i},${d})">🎤 Speak</button>`:""}</div><p class="fb" id="f${i}"></p></div>`});
+  if(!SR)h+=`<p class="tip">Voice check works in Chrome on Android. On this browser, listen and repeat out loud.</p>`;
+  const done=S.done.includes(d);
+  h+=`<button class="big" ${done?"disabled":""} onclick="finish(${d})">${done?"✓ Day completed":"Mark day complete"}</button>
+  <div class="nav">${d>0?`<button class="alt" onclick="openDay(${d-1})">← Day ${d}</button>`:""}${d<29?`<button class="alt" onclick="openDay(${d+1})">Day ${d+2} →</button>`:""}</div>`;
+  app.innerHTML=h;scrollTo(0,0);
+}
+function speak(i,d){
+  const fb=$("#f"+i),target=DAYS[d][1][i],r=new SR();r.lang="en-US";r.interimResults=false;
+  fb.textContent="Listening... speak now";
+  r.onresult=e=>{const said=norm(e.results[0][0].transcript),tw=norm(target);
+    const hit=tw.filter(w=>said.includes(w)).length,pc=Math.round(hit/tw.length*100);
+    fb.textContent=pc>=80?`Great! ${pc}% match. I heard: "${e.results[0][0].transcript}"`:`${pc}% match. I heard: "${e.results[0][0].transcript}". Listen again and try once more.`;
+    $("#p"+i).classList.toggle("hit",pc>=80)};
+  r.onerror=e=>fb.textContent=e.error==="not-allowed"?"Please allow microphone access and try again.":"Could not hear you. Try again.";
+  r.onnomatch=()=>fb.textContent="Could not hear you. Try again.";
+  try{r.start()}catch(e){}
+}
+function finish(d){
+  if(!S.done.includes(d))S.done.push(d);
+  const t=today(),y=new Date(Date.now()-864e5).toDateString();
+  if(S.last!==t){S.streak=S.last===y?S.streak+1:1;S.last=t}
+  save();S.done.length===30?(alert("Congratulations! You finished all 30 days! 🎉"),home()):openDay(d);
+}
+home();
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
