@@ -1,4 +1,4 @@
-# Speak English - 30 Days (home screen app)
+# Speak English: Advanced (home screen app)
 
 ## Put it on GitHub (free hosting)
 1. Sign in at github.com, tap **New repository**, name it `speak-english`, set it to **Public**, then **Create repository**.
@@ -13,3 +13,6 @@
 ## Notes
 - Voice check (mic) works best in Chrome on Android. Listening works on all phones.
 - Progress is saved on your phone. It works offline after the first visit.
+
+## Updating an existing app
+Replace `index.html` and `sw.js` in your repository with the new ones, then close and reopen the app (or remove and re-add it) to load the update.
